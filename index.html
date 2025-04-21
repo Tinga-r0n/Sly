@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday!</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="center">
+    <button id="revealBtn">Click for a Surprise!</button>
+  </div>
+  <div id="bookContainer" class="hidden">
+    <div class="book-wrapper">
+      <div class="book">
+        <div class="front">
+          🎉 Happy Birthday! 🎉<br><small>click me</small>
+        </div>
+        <div class="back">
+          <div id="messageBox" class="hidden">
+            <h6>🎂💖 Happy Birthday, Lang 💖🎂
+
+                From the moment you came into my life, things have felt different since you showed up — in a way I didn’t expect, a little warmer, and a whole lot more beautiful. On your special day, I just want to remind you how incredibly grateful I am for you — for your kindness, your smile, your understanding, and your heart that somehow loves me just the way I am.
+                
+                You deserve all the happiness in the world, not just today but every single day. I hope this birthday brings you laughter, love, peace, and of course — a ridiculous amount of cake 🍰.
+                
+                No matter how many candles are on your cake, you’ll always be my light.
+                
+                I love you, endlessly. Happy Birthday, lang. ❤️</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+document.getElementById("revealBtn").addEventListener("click", () => {
+  const bookContainer = document.getElementById("bookContainer");
+  bookContainer.classList.add("show-card");
+});
+
+
+document.querySelector(".book").addEventListener("click", () => {
+  const book = document.querySelector(".book");
+  book.classList.add("open");
+
+  const messageBox = document.getElementById("messageBox");
+  setTimeout(() => {
+    messageBox.classList.remove("hidden");
+    messageBox.classList.add("show-message");
+    startConfetti();
+  }, 1000); // wait for flip to finish
+});
+
+
+  
+const canvas = document.getElementById("confetti-canvas");
+    const ctx = canvas.getContext("2d");
+    let confetti = [];
+    let confettiInterval;
+    let stopConfettiTimeout;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function startConfetti() {
+      confetti = [];
+      for (let i = 0; i < 300; i++) {
+        confetti.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          r: Math.random() * 6 + 4,
+          d: Math.random() * 10 + 5,
+          color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+          tilt: Math.random() * 10 - 10
+        });
+      }
+      drawConfetti();
+
+      if (stopConfettiTimeout) clearTimeout(stopConfettiTimeout);
+      stopConfettiTimeout = setTimeout(stopConfetti, 10000);
+    }
+
+    function stopConfetti() {
+      confetti = [];
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function drawConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confetti.forEach((c) => {
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+        ctx.fillStyle = c.color;
+        ctx.fill();
+      });
+      updateConfetti();
+      if (confetti.length > 0) {
+        requestAnimationFrame(drawConfetti);
+      }
+    }
+
+    function updateConfetti() {
+      for (let i = 0; i < confetti.length; i++) {
+        confetti[i].y += confetti[i].d;
+        confetti[i].x += Math.sin(confetti[i].tilt);
+        if (confetti[i].y > canvas.height) {
+          confetti[i].y = -10;
+          confetti[i].x = Math.random() * canvas.width;
+        }
+      }
+    }
+    const imageUrls = [
+      'images/1.jpg',
+      'images/2.jpg',
+      'images/3.jpg',
+      'images/4.jpg',
+      'images/5.jpg',
+      'images/6.jpg',
+      'images/7.jpg',
+      'images/8.jpg',
+      'images/9.jpg',
+      'images/10.jpg',
+      'images/11.jpg',
+      'images/12.jpg',
+      'images/13.jpg',
+      'images/14.jpg',
+      'images/15.jpg',
+    ];
+
+    function sprinkleImages() {
+      for (let i = 0; i < 15; i++) {
+        const img = document.createElement('img');
+        img.src = imageUrls[i];
+        img.className = 'floating-img';
+        const size = Math.floor(Math.random() * 100) + 160;
+    img.style.width = `${size}px`;
+    img.style.height = `${size}px`;
+        img.style.top = Math.random() * 100 + 'vh';
+        img.style.left = Math.random() * 100 + 'vw';
+        document.body.appendChild(img);
+
+        setTimeout(() => {
+          img.remove();
+        }, 4000);
+      }
+    }
+
+    setInterval(sprinkleImages, 5000);
+  </script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      text-align: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    .center {
+      margin: 30px;
+    }
+
+    button {
+      background: #ff6f91;
+      color: white;
+      padding: 15px 25px;
+      font-size: 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    #bookContainer {
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    .book {
+      width: 600px;
+      height: 300px;
+      display: flex;
+      transform-style: preserve-3d;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .page {
+      width: 50%;
+      height: 100%;
+      background: white;
+      border: 2px solid #ccc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+      padding: 20px;
+      transition: transform 1s ease-in-out;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .left-page {
+      border-radius: 15px 0 0 15px;
+      transform-origin: left;
+    }
+
+    .right-page {
+      border-radius: 0 15px 15px 0;
+      background: #fffbe6;
+    }
+
+    .open-book .left-page {
+      transform: rotateY(-150deg);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .show-card {
+      animation: slideUp 1s ease-out forwards;
+    }
+
+    .show-message {
+      animation: fadeIn 2s ease-in forwards;
+    }
+
+    @keyframes slideUp {
+      0% { opacity: 0; transform: translateY(50px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    #messageBox h3 {
+      font-size: 24px;
+      color: #ff4081;
+    }
+
+    .floating-img {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      animation: fadeImage 4s ease-in-out;
+      z-index: 50;
+    }
+
+    @keyframes fadeImage {
+      0% { opacity: 0; transform: scale(0.5); }
+      50% { opacity: 1; transform: scale(1.1); }
+      100% { opacity: 0; transform: scale(0.5); }
+    }
+
+    .book-wrapper {
+  perspective: 1000px;
+  width: 600px;
+  height: 300px;
+  margin: auto;
+}
+
+.book {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 1s;
+  cursor: pointer;
+}
+
+.book.open {
+  transform: rotateY(180deg);
+}
+
+.front, .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  border: 2px solid #ccc;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  border-radius: 15px;
+}
+
+.front {
+  background: #fff;
+}
+
+.back {
+  background: #fffbe6;
+  transform: rotateY(180deg);
+}
+#bookContainer {
+  display: none;
+}
+
+#bookContainer.show-card {
+  display: flex !important;
+}
+
+
+  </style>
+  
+</body>
+</html>
